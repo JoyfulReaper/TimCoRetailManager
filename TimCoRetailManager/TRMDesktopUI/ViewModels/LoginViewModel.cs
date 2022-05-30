@@ -11,8 +11,10 @@ namespace TRMDesktopUI.ViewModels
     public class LoginViewModel : Screen
     {
         private readonly IApiHelper _apiHelper;
+
         private string _userName;
         private string _password;
+        private string _errorMessage;
 
         public LoginViewModel(IApiHelper apiHelper)
         {
@@ -39,6 +41,23 @@ namespace TRMDesktopUI.ViewModels
                 NotifyOfPropertyChange(() => CanLogin);
             }
         }
+        
+        public bool IsErrorVisible
+        {
+            get {
+                return ErrorMessage?.Length > 0;
+            }
+        }
+
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set { 
+                _errorMessage = value;
+                NotifyOfPropertyChange(() => ErrorMessage);
+                NotifyOfPropertyChange(() => IsErrorVisible);
+            }
+        }
 
         public bool CanLogin
         {
@@ -55,14 +74,14 @@ namespace TRMDesktopUI.ViewModels
         
         public async Task Login()
         {
-
             try
             {
+                ErrorMessage = "";
                 var result = await _apiHelper.Authenticate(UserName, Password);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                ErrorMessage = ex.Message;
             }
         }
     }
