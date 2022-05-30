@@ -4,14 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TRMDesktopUI.Helpers;
 
 namespace TRMDesktopUI.ViewModels
 {
     public class LoginViewModel : Screen
     {
+        private readonly IApiHelper _apiHelper;
         private string _userName;
         private string _password;
 
+        public LoginViewModel(IApiHelper apiHelper)
+        {
+            _apiHelper = apiHelper;
+        }
+        
         public string UserName
         {
             get { return _userName; }
@@ -45,10 +52,18 @@ namespace TRMDesktopUI.ViewModels
                 return false;
             }
         }
-
-        public void Login(string userName, string password)
+        
+        public async Task Login()
         {
-            Console.WriteLine();
+
+            try
+            {
+                var result = await _apiHelper.Authenticate(UserName, Password);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
