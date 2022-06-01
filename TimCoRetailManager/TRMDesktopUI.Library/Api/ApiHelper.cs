@@ -16,12 +16,20 @@ namespace TRMDesktopUI.Library.Api
 
         private HttpClient _apiClient { get; set; }
 
+        public HttpClient ApiClient
+        {
+            get
+            {
+                return _apiClient;
+            }
+        }
+
         public ApiHelper(ILoggedInUserModel loggedInUser)
         {
             InitializeClient();
             _loggedInUser = loggedInUser;
         }
-        
+
         private void InitializeClient()
         {
             string api = ConfigurationManager.AppSettings["api"];
