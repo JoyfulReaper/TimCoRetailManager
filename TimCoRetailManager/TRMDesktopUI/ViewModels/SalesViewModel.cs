@@ -18,6 +18,9 @@ namespace TRMDesktopUI.ViewModels
         private BindingList<ProductDisplayModel> _products;
         private int _itemQuantity = 1;
         private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
+        private CartItemDisplayModel _selectedCartItem;
+        private ProductDisplayModel _selectedProduct;
+
         private readonly IProductEndpoint _productEndpoint;
         private readonly IConfigHelper _configHelper;
         private readonly ISaleEndpoint _saleEndpoint;
@@ -47,6 +50,17 @@ namespace TRMDesktopUI.ViewModels
             Products = new BindingList<ProductDisplayModel>(products);
         }
 
+        private async Task ResetSalesViewModel()
+        {
+            Cart = new BindingList<CartItemDisplayModel>();
+            await LoadProducts();
+
+            NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
+        }
+        
         public BindingList<ProductDisplayModel> Products
         {
             get { return _products; }
@@ -56,8 +70,6 @@ namespace TRMDesktopUI.ViewModels
                 NotifyOfPropertyChange(() => Products);
             }
         }
-
-        private ProductDisplayModel _selectedProduct;
 
         public ProductDisplayModel SelectedProduct
         {
@@ -70,8 +82,6 @@ namespace TRMDesktopUI.ViewModels
             }
         }
 
-        private CartItemDisplayModel _selectedCartItem;
-        
         public CartItemDisplayModel SelectedCartItem
         {
             get { return _selectedCartItem; }
@@ -109,7 +119,7 @@ namespace TRMDesktopUI.ViewModels
 
             return subTotal;
         }
-        
+
         private decimal CalculateTax()
         {
             decimal taxAmount = 0;
@@ -130,7 +140,7 @@ namespace TRMDesktopUI.ViewModels
 
             return taxAmount;
         }
-        
+
         public string Tax
         {
             get => CalculateTax().ToString("C");
@@ -176,7 +186,7 @@ namespace TRMDesktopUI.ViewModels
         {
             CartItemDisplayModel exisitingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
 
-            if(exisitingItem != null)
+            if (exisitingItem != null)
             {
                 exisitingItem.QuantityInCart += ItemQuantity;
             }
@@ -190,7 +200,7 @@ namespace TRMDesktopUI.ViewModels
 
                 Cart.Add(item);
             }
-           
+
             SelectedProduct.QuantityInStock -= ItemQuantity;
             ItemQuantity = 1;
 
@@ -205,10 +215,7 @@ namespace TRMDesktopUI.ViewModels
             get
             {
                 // Make sure that something is selected
-                if (SelectedCartItem != null && SelectedCartItem?.Product.QuantityInStock > 0)
-                {
-                    return true;
-                }
+                if (SelectedCartItem != null && SelectedCartItem?.QuantityInCart > 0)
                 {
                     return true;
                 }
@@ -219,8 +226,12 @@ namespace TRMDesktopUI.ViewModels
 
         public void RemoveFromCart()
         {
+            if (SelectedCartItem == null)
+            {
+                return;
+            }
             SelectedCartItem.Product.QuantityInStock++;
-            
+
             if (SelectedCartItem.QuantityInCart > 1)
             {
                 SelectedCartItem.QuantityInCart--;
@@ -229,11 +240,12 @@ namespace TRMDesktopUI.ViewModels
             {
                 Cart.Remove(SelectedCartItem);
             }
-            
+
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
             NotifyOfPropertyChange(() => CanCheckOut);
+            NotifyOfPropertyChange(() => CanAddToCart);
         }
 
         public bool CanCheckOut
@@ -264,6 +276,7 @@ namespace TRMDesktopUI.ViewModels
             }
 
             await _saleEndpoint.PostSale(sale);
+            await ResetSalesViewModel();
         }
     }
 }
