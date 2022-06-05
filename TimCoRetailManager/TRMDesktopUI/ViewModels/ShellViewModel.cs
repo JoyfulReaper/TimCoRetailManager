@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using TRMDesktopUI.EventModels;
+using TRMDesktopUI.Library.Api;
 using TRMDesktopUI.Library.Models;
 
 namespace TRMDesktopUI.ViewModels
@@ -15,14 +16,17 @@ namespace TRMDesktopUI.ViewModels
         private readonly IEventAggregator _events;
         private readonly SalesViewModel _salesVM;
         private readonly ILoggedInUserModel _user;
+        private readonly IApiHelper _apiHelper;
 
         public ShellViewModel(IEventAggregator events,
             SalesViewModel salesVM,
-            ILoggedInUserModel user)
+            ILoggedInUserModel user,
+            IApiHelper apiHelper)
         {
             _events = events;
             _salesVM = salesVM;
             _user = user;
+            _apiHelper = apiHelper;
             _events.SubscribeOnPublishedThread(this);
 
             Task.Run(async () =>
@@ -56,7 +60,8 @@ namespace TRMDesktopUI.ViewModels
 
         public async Task LogOut()
         {
-            _user.LogOffUser();
+            _user.ResetUserModel();
+            _apiHelper.LogOffUser();
             await ActivateItemAsync(IoC.Get<LoginViewModel>());
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
