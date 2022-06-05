@@ -22,5 +22,5 @@ BEGIN
 		,@Tax
 		,@Total)
 		
-	SELECT @id = @@IDENTITY
+	SELECT @id = SCOPE_IDENTITY();
 END
