@@ -23,10 +23,12 @@ namespace TRMDataManager.Controllers
             data.SaveSale(sale, userId);
         }
 
-        //public IList<ProductModel> Get()
-        //{
-        //    ProductData data = new ProductData();
-        //    return data.GetProducts();
-        //}
+        [HttpGet]
+        [Route("GetSalesReport")]
+        public List<SaleReportModel> GetSalesReport()
+        {
+            SaleData data = new SaleData();
+            return data.GetSaleReport();
+        }
     }
 }
