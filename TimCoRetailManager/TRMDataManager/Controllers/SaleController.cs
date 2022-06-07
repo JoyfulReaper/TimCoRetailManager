@@ -14,6 +14,7 @@ namespace TRMDataManager.Controllers
     [Authorize]
     public class SaleController : ApiController
     {
+        [Authorize(Roles = "Cashier")]
         public void Post(SaleModel sale)
         {
             SaleData data = new SaleData();
@@ -25,8 +26,18 @@ namespace TRMDataManager.Controllers
 
         [HttpGet]
         [Route("GetSalesReport")]
+        [Authorize(Roles = "Admin,Manager")]
         public List<SaleReportModel> GetSalesReport()
         {
+            if(RequestContext.Principal.IsInRole("Admin"))
+            {
+                // Do admin Stuff
+            }
+            else if (RequestContext.Principal.IsInRole("Manager"))
+            {
+                // Do manager Stuff
+            }
+
             SaleData data = new SaleData();
             return data.GetSaleReport();
         }
