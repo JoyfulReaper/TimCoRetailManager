@@ -31,7 +31,48 @@ namespace TRMDesktopUI.Library.Api
                     throw new Exception(respose.ReasonPhrase);
                 }
             }
+        }
 
+        public async Task<Dictionary<string, string>> GetAllRoles()
+        {
+            using (HttpResponseMessage respose = await _apiHelper.ApiClient.GetAsync("/api/User/Admin/GetAllRoles"))
+            {
+                if (respose.IsSuccessStatusCode)
+                {
+                    var result = await respose.Content.ReadAsAsync<Dictionary<string, string>>();
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(respose.ReasonPhrase);
+                }
+            }
+        }
+        
+        public async Task AddUserToRole(string userId, string roleName)
+        {
+            var data = new {userId, roleName };
+            
+            using (HttpResponseMessage respose = await _apiHelper.ApiClient.PostAsJsonAsync("/api/User/Admin/AddRole", data))
+            {
+                if (respose.IsSuccessStatusCode == false)
+                {
+                    throw new Exception(respose.ReasonPhrase);
+                }
+            }
+        }
+
+        public async Task RemoveUserFromRole(string userId, string roleName)
+        {
+            var data = new { userId, roleName };
+
+            using (HttpResponseMessage respose = await _apiHelper.ApiClient.PostAsJsonAsync("/api/User/Admin/RemoveRole", data))
+            {
+                if (respose.IsSuccessStatusCode == false)
+                {
+                    throw new Exception(respose.ReasonPhrase);
+                }
+            }
         }
     }
 }
