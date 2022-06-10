@@ -12,13 +12,13 @@ BEGIN
 	INSERT INTO [dbo].[Sale]
 		([CashierId]
 		,[SaleDate]
-		,[SubTotal]
+		,[Subtotal]
 		,[Tax]
 		,[Total])
 	VALUES
 		(@CashierId
 		,@SaleDate
-		,@SubTotal
+		,@Subtotal
 		,@Tax
 		,@Total)
 		
