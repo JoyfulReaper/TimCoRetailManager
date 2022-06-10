@@ -2,7 +2,7 @@
 	@Id int output,
 	@CashierId nvarchar(128),
 	@SaleDate datetime2,
-	@SubTotal money,
+	@Subtotal money,
 	@Tax money,
 	@Total money
 AS
@@ -22,5 +22,5 @@ BEGIN
 		,@Tax
 		,@Total)
 		
-	SELECT @id = SCOPE_IDENTITY();
+	SELECT @Id = SCOPE_IDENTITY();
 END
