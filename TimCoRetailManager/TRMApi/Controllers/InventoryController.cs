@@ -25,6 +25,7 @@ public class InventoryController : ControllerBase
         return data.GetInventory();
     }
 
+    [HttpPost]
     [Authorize(Roles = "Admin")]
     public void Post(InventoryModel item)
     {

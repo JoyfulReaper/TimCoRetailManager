@@ -18,6 +18,7 @@ public class ProductController : ControllerBase
         _config = config;
     }
     
+    [HttpGet]
     public IList<ProductModel> Get()
     {
         ProductData data = new ProductData(_config);
