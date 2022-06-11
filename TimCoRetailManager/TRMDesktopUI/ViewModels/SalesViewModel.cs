@@ -17,11 +17,11 @@ namespace TRMDesktopUI.ViewModels
 {
     public class SalesViewModel : Screen
     {
-        private BindingList<ProductDisplayModel> _products;
+        private BindingList<ProductDisplayModel> _products = new();
         private int _itemQuantity = 1;
         private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
-        private CartItemDisplayModel _selectedCartItem;
-        private ProductDisplayModel _selectedProduct;
+        private CartItemDisplayModel _selectedCartItem = new();
+        private ProductDisplayModel _selectedProduct = new();
 
         private readonly IProductEndpoint _productEndpoint;
         private readonly IConfigHelper _configHelper;

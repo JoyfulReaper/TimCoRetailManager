@@ -16,7 +16,7 @@ namespace TRMDesktopUI.ViewModels
         
         private string _userName = "admin@example.com";
         private string _password = "Password123!";
-        private string _errorMessage;
+        private string _errorMessage ="";
 
         public LoginViewModel(IApiHelper apiHelper, 
             IEventAggregator events)
