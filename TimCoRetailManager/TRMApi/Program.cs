@@ -4,6 +4,8 @@ using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TRMApi.Data;
+using TRMDataManager.Library.DataAccess;
+using TRMDataManager.Library.Intenal.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,14 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
+
+// Personal Services
+builder.Services.AddTransient<IInventoryData, InventoryData>();
+builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
+builder.Services.AddTransient<IProductData, ProductData>();
+builder.Services.AddTransient<ISaleData, SaleData>();
+builder.Services.AddTransient<IUserData, UserData>();
 
 builder.Services.AddAuthentication(options =>
 {

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace TRMDataManager.Library.Intenal.DataAccess
 {
-    internal class SqlDataAccess : IDisposable
+    public class SqlDataAccess : IDisposable, ISqlDataAccess
     {
         private IDbConnection _connection;
         private IDbTransaction _transaction;
@@ -96,7 +96,7 @@ namespace TRMDataManager.Library.Intenal.DataAccess
 
         public void Dispose()
         {
-            if(isClosed == false)
+            if (isClosed == false)
             {
                 try
                 {
